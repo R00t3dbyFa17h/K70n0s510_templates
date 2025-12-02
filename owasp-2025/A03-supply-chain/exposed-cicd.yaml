@@ -1,0 +1,22 @@
+id: K70n0s510-exposed-cicd
+
+info:
+  name: Exposed CI/CD Configs (A03:2025)
+  author: K70n0s510
+  severity: high
+  description: Detects exposed workflow configuration files which may contain secrets or supply chain logic.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.github/workflows/main.yml"
+      - "{{BaseURL}}/.gitlab-ci.yml"
+      - "{{BaseURL}}/.circleci/config.yml"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "jobs:"
+          - "pipeline"
+          - "steps:"
