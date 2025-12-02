@@ -1,0 +1,18 @@
+id: K70n0s510-firebase-config
+info:
+  name: Exposed Firebase Config
+  author: K70n0s510
+  severity: high
+  description: Detects exposed Firebase configuration files leading to backend compromise.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/firebase.json"
+      - "{{BaseURL}}/.firebase/settings"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - '"apiKey":'
+          - '"authDomain":'
+          - '"projectId":'
