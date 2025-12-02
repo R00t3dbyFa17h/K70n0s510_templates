@@ -1,9 +1,9 @@
 id: K70n0s510-swagger-ui
 info:
-  name: Swagger/OpenAPI Documentation (High Fidelity)
+  name: Swagger/OpenAPI Documentation (Strict)
   author: K70n0s510
   severity: info
-  description: Locates API documentation. Filters out WAF blocks and 403 errors.
+  description: Locates API documentation. REQUIRES HTTP 200 OK to trigger.
 http:
   - method: GET
     path:
@@ -14,7 +14,12 @@ http:
 
     matchers-condition: and
     matchers:
-      # POSITIVE: Look for these real API keywords
+      # Condition 1: MUST be a 200 OK
+      - type: status
+        status:
+          - 200
+
+      # Condition 2: Must contain API keywords
       - type: word
         words:
           - "swagger"
@@ -24,18 +29,11 @@ http:
           - "api-docs"
         part: body
 
-      # REQUIREMENT: Must be a successful page load
-      - type: status
-        status:
-          - 200
-
-      # NEGATIVE: Ignore these common WAF/Error responses
+      # Condition 3: Must NOT be a WAF error
       - type: word
         words:
           - "Access Denied"
           - "AkamaiGHost"
           - "Cloudflare"
-          - "403 Forbidden"
-          - "You don't have permission"
         part: body
         negative: true
