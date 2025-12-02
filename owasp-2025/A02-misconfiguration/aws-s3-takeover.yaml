@@ -1,36 +1,36 @@
 id: K70n0s510-s3-takeover
 info:
-  name: AWS S3 Bucket Takeover & Enumeration
+  name: AWS S3 Bucket Takeover & Enumeration (Smart)
   author: K70n0s510
   severity: critical
-  description: Detects open S3 buckets and scans for hardcoded bucket URLs in the application.
+  description: Detects S3 buckets while ignoring WAFs like Akamai.
 http:
   - method: GET
     path:
       - "{{BaseURL}}"
       - "https://s3.amazonaws.com/{{HostName}}"
       - "https://{{HostName}}.s3.amazonaws.com"
-      - "https://assets.{{HostName}}.s3.amazonaws.com"
-      - "https://backups.{{HostName}}.s3.amazonaws.com"
-      - "https://prod.{{HostName}}.s3.amazonaws.com"
 
     matchers-condition: or
     matchers:
+      # Match 1: Open Listing (XML)
       - type: word
         name: s3-open-listing
         words:
           - "<ListBucketResult"
           - "<Name>{{HostName}}</Name>"
           - "<Key>"
-      - type: word
+
+      # Match 2: Permission Error (BUT MUST BE S3)
+      - type: dsl
         name: s3-permission-error
-        words:
-          - "Access Denied"
-          - "AllAccessDisabled"
-        part: body
+        dsl:
+          - "contains(body, 'Access Denied') && contains(header, 'AmazonS3')"
+          - "contains(body, 'Access Denied') && contains(header, 'x-amz-request-id')"
+
+      # Match 3: Leaky Links
       - type: word
         name: leaky-s3-links
         words:
           - "s3.amazonaws.com"
-          - "s3-us-west-2.amazonaws.com"
         part: body
