@@ -1,0 +1,36 @@
+id: K70n0s510-s3-takeover
+info:
+  name: AWS S3 Bucket Takeover & Enumeration
+  author: K70n0s510
+  severity: critical
+  description: Detects open S3 buckets and scans for hardcoded bucket URLs in the application.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+      - "https://s3.amazonaws.com/{{HostName}}"
+      - "https://{{HostName}}.s3.amazonaws.com"
+      - "https://assets.{{HostName}}.s3.amazonaws.com"
+      - "https://backups.{{HostName}}.s3.amazonaws.com"
+      - "https://prod.{{HostName}}.s3.amazonaws.com"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        name: s3-open-listing
+        words:
+          - "<ListBucketResult"
+          - "<Name>{{HostName}}</Name>"
+          - "<Key>"
+      - type: word
+        name: s3-permission-error
+        words:
+          - "Access Denied"
+          - "AllAccessDisabled"
+        part: body
+      - type: word
+        name: leaky-s3-links
+        words:
+          - "s3.amazonaws.com"
+          - "s3-us-west-2.amazonaws.com"
+        part: body
