@@ -1,0 +1,22 @@
+id: K70n0s510-cloud-metadata-ssrf
+info:
+  name: Cloud Metadata Exposure (SSRF/A01)
+  author: K70n0s510
+  severity: critical
+  description: Detects endpoints that leak Cloud Metadata (AWS/GCP/Azure) indicating a Broken Access Control (SSRF) flaw.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/proxy?target=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/fetch?uri=http://metadata.google.internal/computeMetadata/v1/"
+      - "{{BaseURL}}/feed?url=http://169.254.169.254/"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "ami-id"
+          - "instance-id"
+          - "computeMetadata"
+          - "iam/security-credentials/"
