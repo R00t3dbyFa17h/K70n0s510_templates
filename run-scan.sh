@@ -1,63 +1,27 @@
 #!/bin/bash
 
-# Define Colors for Professional Output
+# K70n0s510 Scanner - Alerting Edition
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Function: Help Menu
-show_help() {
-    echo -e "${BLUE}K70n0s510 Detection Engine - OWASP 2025 Scanner${NC}"
-    echo ""
-    echo "Usage: ./run-scan.sh [TARGET_URL] [OPTIONS]"
-    echo ""
-    echo "Arguments:"
-    echo "  TARGET_URL    The full URL to scan (e.g., https://example.com)"
-    echo ""
-    echo "Options:"
-    echo "  -h, --help    Show this help message and exit"
-    echo ""
-    echo "Examples:"
-    echo "  ./run-scan.sh https://target.com"
-    echo "  ./run-scan.sh --help"
-    echo ""
-}
-
-# Check for Help Flag
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    show_help
-    exit 0
-fi
-
-# Check if Target is provided
-if [ -z "$1" ]; then
-    echo -e "${RED}❌ Error: No target specified.${NC}"
-    show_help
-    exit 1
-fi
+NC='\033[0m'
 
 TARGET=$1
 
-# Check if Nuclei is installed
-if ! command -v nuclei &> /dev/null; then
-    echo -e "${RED}❌ Error: Nuclei is not installed or not in your PATH.${NC}"
-    echo -e "${YELLOW}💡 Fix: Please install it via: go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest${NC}"
+# Absolute Path to templates
+TEMPLATE_DIR="$HOME/K70n0s510_templates/owasp-2025/"
+
+if [ -z "$TARGET" ]; then
+    echo -e "${RED}Usage: ./run-scan.sh <target>${NC}"
     exit 1
 fi
 
-# Start the Scan
-echo -e "${GREEN}🚀 K70n0s510 Scanner: Initiating OWASP 2025 Protocol on $TARGET...${NC}"
-echo -e "${YELLOW}Running custom templates from: owasp-2025/${NC}"
+echo -e "${GREEN}🚀 K70n0s510 Scanner: Active on $TARGET...${NC}"
+echo -e "${BLUE}📂 Loading templates from: $TEMPLATE_DIR ${NC}"
+echo -e "${BLUE}🔔 Alerts configured: Sending hits to Discord.${NC}"
 
-# Run Nuclei using the local templates folder
-# Flags Explanation:
-# -t owasp-2025/   -> Use your custom folder
-# -rl 50           -> Rate Limit (Safe speed)
-# -bs 10           -> Bulk Size (Parallel requests)
-# -nm              -> No Metadata (Cleaner output)
-nuclei -u "$TARGET" -t owasp-2025/ -rl 50 -bs 10 -nm
+# Pipeline: Nuclei -> JSON -> Notify -> Discord
+# Note: Requires 'notify' tool installed and configured in ~/.config/notify/provider-config.yaml
+nuclei -u "$TARGET" -t "$TEMPLATE_DIR" -rl 50 -bs 10 -silent -j | tee -a scan_results.json | notify -provider-config ~/.config/notify/provider-config.yaml -id k70-alerts -bulk
 
-echo ""
-echo -e "${GREEN}✅ Scan Complete. Happy Hunting.${NC}"
+echo -e "${GREEN}✅ Scan Complete.${NC}"

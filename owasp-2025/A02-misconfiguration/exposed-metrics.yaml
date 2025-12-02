@@ -1,0 +1,20 @@
+id: K70n0s510-exposed-metrics
+info:
+  name: Exposed Prometheus/App Metrics
+  author: K70n0s510
+  severity: info
+  description: Detects exposed metrics endpoints which leak server internals (RAM, CPU, Software Versions).
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/metrics"
+      - "{{BaseURL}}/actuator/prometheus"
+      - "{{BaseURL}}/prometheus"
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "# HELP"
+          - "# TYPE"
+          - "go_gc_duration_seconds"
+          - "nodejs_version_info"
