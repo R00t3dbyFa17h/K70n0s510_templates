@@ -1,14 +1,38 @@
 id: K70n0s510-verbose-stack-trace
 info:
-  name: Verbose Stack Trace Exposure (A10:2025)
+  name: Verbose Stack Trace & Debug Mode
   author: K70n0s510
   severity: medium
+  description: Forces errors using special characters and looks for debug output.
 http:
   - method: GET
     path:
       - "{{BaseURL}}/doesntexist_K70n0s510"
+      - "{{BaseURL}}/api/v1/"
+      - "{{BaseURL}}/.git/config"   # Often triggers 403/500 with traces on bad configs
+      - "{{BaseURL}}/admin.php.bak" # Often triggers PHP errors
+      - "{{BaseURL}}/%00"            # Null byte injection
+      - "{{BaseURL}}/%2e%2e/"        # Directory traversal attempt
+
+    matchers-condition: or
     matchers:
       - type: word
+        name: python-trace
         words:
           - "Traceback (most recent call last)"
+          - "ModuleNotFoundError"
+      - type: word
+        name: java-trace
+        words:
           - "java.lang.NullPointerException"
+          - "at org.apache.catalina"
+      - type: word
+        name: php-trace
+        words:
+          - "Fatal error:"
+          - "Uncaught Error:"
+      - type: word
+        name: laravel-debug
+        words:
+          - "Whoops, looks like something went wrong."
+          - "Illuminate\Database\QueryException"

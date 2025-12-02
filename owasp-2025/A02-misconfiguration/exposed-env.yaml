@@ -1,13 +1,31 @@
 id: K70n0s510-env-exposure
 info:
-  name: Cloud Environment Exposure (A02:2025)
+  name: Cloud Environment Exposure (Deep Scan)
   author: K70n0s510
   severity: critical
+  description: Hunts for .env files and their production/backup variations.
 http:
   - method: GET
     path:
       - "{{BaseURL}}/.env"
+      - "{{BaseURL}}/.env.production"
+      - "{{BaseURL}}/.env.local"
+      - "{{BaseURL}}/.env.development"
+      - "{{BaseURL}}/.env.bak"
+      - "{{BaseURL}}/.env.old"
+      - "{{BaseURL}}/.env.save"
+      - "{{BaseURL}}/docker-compose.yml"
+      - "{{BaseURL}}/docker-compose.prod.yml"
+
+    matchers-condition: and
     matchers:
       - type: word
         words:
           - "AWS_ACCESS_KEY_ID="
+          - "DB_PASSWORD="
+          - "SLACK_BOT_TOKEN="
+          - "STRIPE_SECRET_KEY="
+          - "DB_HOST="
+      - type: status
+        status:
+          - 200

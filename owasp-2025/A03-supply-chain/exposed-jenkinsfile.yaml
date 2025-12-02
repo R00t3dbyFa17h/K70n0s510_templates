@@ -1,14 +1,26 @@
 id: K70n0s510-exposed-jenkinsfile
 info:
-  name: Exposed Jenkins Pipeline (A03:2025)
+  name: Exposed Jenkins Pipeline
   author: K70n0s510
   severity: high
+  description: Detects Jenkinsfiles in root and CI folders.
 http:
   - method: GET
     path:
       - "{{BaseURL}}/Jenkinsfile"
+      - "{{BaseURL}}/.jenkins/Jenkinsfile"
+      - "{{BaseURL}}/pipeline.groovy"
+      - "{{BaseURL}}/ci/Jenkinsfile"
+      - "{{BaseURL}}/Jenkinsfile.old"
+
+    matchers-condition: and
     matchers:
       - type: word
         words:
           - "pipeline {"
           - "stages {"
+          - "agent any"
+          - "node {"
+      - type: status
+        status:
+          - 200
