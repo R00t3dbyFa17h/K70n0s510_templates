@@ -1,0 +1,13 @@
+id: K70n0s510-terraform-state
+info:
+  name: Exposed Terraform State (A02:2025)
+  author: K70n0s510
+  severity: critical
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/terraform.tfstate"
+    matchers:
+      - type: word
+        words:
+          - '"terraform_version":'

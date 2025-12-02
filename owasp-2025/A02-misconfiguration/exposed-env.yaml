@@ -1,0 +1,13 @@
+id: K70n0s510-env-exposure
+info:
+  name: Cloud Environment Exposure (A02:2025)
+  author: K70n0s510
+  severity: critical
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.env"
+    matchers:
+      - type: word
+        words:
+          - "AWS_ACCESS_KEY_ID="

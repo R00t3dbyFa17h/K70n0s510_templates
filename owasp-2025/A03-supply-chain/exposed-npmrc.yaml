@@ -1,0 +1,14 @@
+id: K70n0s510-exposed-npmrc
+info:
+  name: Exposed NPM Config (A03:2025)
+  author: K70n0s510
+  severity: critical
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.npmrc"
+    matchers:
+      - type: word
+        words:
+          - "_auth="
+          - "_authToken="

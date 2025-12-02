@@ -1,0 +1,14 @@
+id: K70n0s510-verbose-stack-trace
+info:
+  name: Verbose Stack Trace Exposure (A10:2025)
+  author: K70n0s510
+  severity: medium
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/doesntexist_K70n0s510"
+    matchers:
+      - type: word
+        words:
+          - "Traceback (most recent call last)"
+          - "java.lang.NullPointerException"

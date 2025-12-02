@@ -1,0 +1,14 @@
+id: K70n0s510-exposed-jenkinsfile
+info:
+  name: Exposed Jenkins Pipeline (A03:2025)
+  author: K70n0s510
+  severity: high
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/Jenkinsfile"
+    matchers:
+      - type: word
+        words:
+          - "pipeline {"
+          - "stages {"
