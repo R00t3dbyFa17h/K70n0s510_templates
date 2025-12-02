@@ -8,7 +8,7 @@ It contains custom-engineered vulnerability signatures designed to align with th
 
 Unlike generic community templates, these signatures are **"On Steroids"**—tuned for **High Fidelity** and **Deep Logic** using flow control, regex verification, and binary analysis.
 
-## 🧠 Engineering Philosophy (Why this engine is different)
+## 🧠 Engineering Philosophy
 
 ### 1. 🌊 Flow Logic & Context Awareness
 We don't just spray requests. We use **conditional execution flows**.
@@ -16,11 +16,10 @@ We don't just spray requests. We use **conditional execution flows**.
 
 ### 2. 🎯 Negative Matching (Zero False Positives)
 A `200 OK` is not a vulnerability. 
-* *Example:* The **Kubernetes Scanner** explicitly ignores blog posts and documentation by checking for HTML tags like `<!DOCTYPE html>` in the response body. If it triggers, it's real.
+* *Example:* The **Kubernetes Scanner** explicitly ignores blog posts and documentation by checking for HTML tags like `<!DOCTYPE html>` in the response body.
 
 ### 3. 🧩 Polyglot Payloads
-Cloud environments are complex. 
-* *Example:* The **SSRF Hunter** doesn't just check AWS. It injects headers (`X-Forwarded-For`) to bypass WAFs and checks AWS, GCP, Azure, and Alibaba metadata endpoints simultaneously.
+* *Example:* The **SSRF Hunter** injects headers (`X-Forwarded-For`) to bypass WAFs and checks AWS, GCP, Azure, and Alibaba metadata endpoints simultaneously.
 
 ### 4. 🔍 Binary & Regex Analysis
 * **Binary:** We verify ZIP file magic bytes (`504B0304`) to confirm artifact downloads are valid archives.
@@ -30,7 +29,7 @@ Cloud environments are complex.
 
 | Category | Vulnerability Class | Detection Strategy |
 | :--- | :--- | :--- |
-| **A01: Access Control** | **SSRF / Metadata** | Polyglot header injection targeting cloud metadata services (AWS/GCP/Azure). |
+| **A01: Access Control** | **SSRF / Metadata** | Polyglot header injection targeting cloud metadata services. |
 | **A02: Misconfiguration** | **Kubernetes & Cloud** | Deep probes on Kubelet API (10250) & header-validated S3 bucket enumeration. |
 | **A03: Supply Chain** | **CI/CD Pipelines** | Analysis of Jenkins `consoleText` and binary validation of TeamCity `artifacts.zip`. |
 | **A05: Insecure Design** | **API Leaks** | GraphQL introspection mapping & Swagger/OpenAPI route discovery. |
@@ -41,15 +40,35 @@ Cloud environments are complex.
 
 **Prerequisite:** [Install Nuclei](https://github.com/projectdiscovery/nuclei)
 
-### 1. Automated Scan (Recommended)
-Use the included helper script to standardize scan flags, rate limits, and output formatting.
+### 1. The Automation Script (Recommended)
+This repository includes a robust wrapper script that handles rate limiting, colorized output, and dependency checking.
+
+**View the Help Menu:**
 ```bash
 chmod +x run-scan.sh
-./run-scan.sh target.com
+./run-scan.sh --help
+```
+
+**Output:**
+```text
+K70n0s510 Detection Engine - OWASP 2025 Scanner
+
+Usage: ./run-scan.sh [TARGET_URL] [OPTIONS]
+
+Arguments:
+  TARGET_URL    The full URL to scan (e.g., https://example.com)
+
+Options:
+  -h, --help    Show this help message and exit
+```
+
+**Run a Scan:**
+```bash
+./run-scan.sh https://target.com
 ```
 
 ### 2. Manual Execution
-To run the specialized "Supply Chain" suite:
+To run specific suites (e.g., Supply Chain only):
 ```bash
 nuclei -u https://target.com -t owasp-2025/A03-supply-chain/ -rl 50 -bs 10
 ```
