@@ -1,26 +1,41 @@
-id: K70n0s510-exposed-jenkinsfile
+id: K70n0s510-smart-jenkins
 info:
-  name: Exposed Jenkins Pipeline
+  name: Jenkins Takeover (Flow Logic)
   author: K70n0s510
-  severity: high
-  description: Detects Jenkinsfiles in root and CI folders.
+  severity: critical
+  description: Identifies Jenkins and immediately attempts to find the Script Console and Secrets.
+flow: |
+  http(1) && (http(2) || http(3))
+
 http:
+  # Step 1: Detect Jenkins Fingerprint
   - method: GET
     path:
-      - "{{BaseURL}}/Jenkinsfile"
-      - "{{BaseURL}}/.jenkins/Jenkinsfile"
-      - "{{BaseURL}}/pipeline.groovy"
-      - "{{BaseURL}}/ci/Jenkinsfile"
-      - "{{BaseURL}}/Jenkinsfile.old"
-
-    matchers-condition: and
+      - "{{BaseURL}}/login"
     matchers:
       - type: word
         words:
-          - "pipeline {"
-          - "stages {"
-          - "agent any"
-          - "node {"
-      - type: status
-        status:
-          - 200
+          - "X-Jenkins"
+          - "Jenkins"
+        part: header
+        internal: true
+
+  # Step 2: If Step 1 hits, try to access Script Console (RCE)
+  - method: GET
+    path:
+      - "{{BaseURL}}/script"
+    matchers:
+      - type: word
+        words:
+          - "println(Jenkins.instance.pluginManager.plugins)"
+          - "Groovy script"
+
+  # Step 3: Or try to read credentials.xml
+  - method: GET
+    path:
+      - "{{BaseURL}}/credentials.xml"
+      - "{{BaseURL}}/jobs/credentials.xml"
+    matchers:
+      - type: word
+        words:
+          - "<com.cloudbees.plugins.credentials.SystemCredentialsProvider"

