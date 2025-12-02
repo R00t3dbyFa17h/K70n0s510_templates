@@ -1,9 +1,9 @@
 id: K70n0s510-swagger-ui
 info:
-  name: Swagger/OpenAPI Documentation
+  name: Swagger/OpenAPI Documentation (High Fidelity)
   author: K70n0s510
   severity: info
-  description: Locates API documentation which assists in crafting precise attacks.
+  description: Locates API documentation. Filters out WAF blocks and 403 errors.
 http:
   - method: GET
     path:
@@ -11,10 +11,31 @@ http:
       - "{{BaseURL}}/v2/api-docs"
       - "{{BaseURL}}/openapi.json"
       - "{{BaseURL}}/docs"
-    matchers-condition: or
+
+    matchers-condition: and
     matchers:
+      # POSITIVE: Look for these real API keywords
       - type: word
         words:
           - "swagger"
           - "openapi"
           - "\"paths\":"
+          - "swagger-ui-bundle"
+          - "api-docs"
+        part: body
+
+      # REQUIREMENT: Must be a successful page load
+      - type: status
+        status:
+          - 200
+
+      # NEGATIVE: Ignore these common WAF/Error responses
+      - type: word
+        words:
+          - "Access Denied"
+          - "AkamaiGHost"
+          - "Cloudflare"
+          - "403 Forbidden"
+          - "You don't have permission"
+        part: body
+        negative: true
