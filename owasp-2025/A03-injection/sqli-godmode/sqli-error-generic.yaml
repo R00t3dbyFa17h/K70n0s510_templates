@@ -1,0 +1,13 @@
+id: K70n0s510-sqli-error
+info:
+  name: Generic Error-Based SQLi
+  author: K70n0s510
+  severity: high
+  tags: sqli,error
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1'", "{{BaseURL}}/?id=1\""]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["SQL syntax", "MariaDB", "quoted string not properly terminated"]

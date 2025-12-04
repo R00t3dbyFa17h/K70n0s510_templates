@@ -1,0 +1,12 @@
+id: K70n0s510-sqli-time-postgres
+info:
+  name: PostgreSQL Time-Based SQLi
+  author: K70n0s510
+  severity: critical
+  tags: sqli,postgres
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1'; SELECT pg_sleep(6)--"]
+    matchers:
+      - type: dsl
+        dsl: ["duration>=6"]

@@ -1,0 +1,14 @@
+id: K70n0s510-sqli-boolean
+info:
+  name: Boolean Blind SQLi (AND 1=1)
+  author: K70n0s510
+  severity: critical
+  description: Checks if the page content changes between True (1=1) and False (1=0).
+  tags: sqli,blind
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1' AND 1=1--", "{{BaseURL}}/?id=1' AND 1=0--"]
+    matchers:
+      - type: dsl
+        dsl:
+          - "len(body_1) != len(body_2)" # If lengths differ, it parsed the SQL.

