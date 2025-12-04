@@ -1,0 +1,16 @@
+id: K70n0s510-editor-temp-files
+info:
+  name: Exposed Editor Temporary Files (.swp/~)
+  severity: high
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.php.swp"
+      - "{{BaseURL}}/.env.swp"
+      - "{{BaseURL}}/wp-config.php.swp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: binary
+        binary: ["623056494d"]

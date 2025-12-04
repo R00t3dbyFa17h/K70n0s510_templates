@@ -1,14 +1,14 @@
-id: K70n0s510-exposed-env
+id: K70n0s510-exposed-git-config
 info:
-  name: Critical Environment File (.env) Exposure
+  name: Exposed .git/config File
   severity: critical
 http:
   - method: GET
     path:
-      - "{{BaseURL}}/.env"
+      - "{{BaseURL}}/.git/config"
     matchers-condition: and
     matchers:
       - type: status
         status: [200]
       - type: word
-        words: ["DB_PASSWORD=", "AWS_ACCESS_KEY_ID="]
+        words: ["[core]", "repositoryformatversion"]

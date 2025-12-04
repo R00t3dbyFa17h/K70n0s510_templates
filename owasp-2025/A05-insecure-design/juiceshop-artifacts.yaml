@@ -3,26 +3,13 @@ info:
   name: OWASP Juice Shop Specific Artifacts
   author: K70n0s510
   severity: high
-  description: Detects known Juice Shop vulnerable endpoints (FTP, Scoreboard, Backups).
 http:
   - method: GET
     path:
-      - "{{BaseURL}}/ftp"
-      - "{{BaseURL}}/#/score-board"
       - "{{BaseURL}}/rest/admin/application-configuration"
-      - "{{BaseURL}}/assets/public/images/uploads/"
-    matchers-condition: or
+    matchers-condition: and
     matchers:
-      - type: word
-        name: open-ftp
-        words:
-          - "index - /ftp"
-          - "acquisitions.md"
-      - type: word
-        name: exposed-config
-        words:
-          - '"config":'
-          - "application-configuration"
       - type: status
-        status:
-          - 200
+        status: [200]
+      - type: word
+        words: ["application-configuration", "\"config\":"]

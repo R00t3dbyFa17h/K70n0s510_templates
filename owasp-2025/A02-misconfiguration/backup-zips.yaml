@@ -1,0 +1,13 @@
+id: K70n0s510-backup-zips
+info:
+  name: Exposed Backup Archives
+  severity: high
+http:
+  - method: GET
+    path: ["{{BaseURL}}/www.zip", "{{BaseURL}}/backup.zip"]
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: binary
+        binary: ["504b0304"]

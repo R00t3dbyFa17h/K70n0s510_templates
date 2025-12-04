@@ -1,0 +1,13 @@
+id: K70n0s510-wordpress-users
+info:
+  name: WordPress User Enumeration
+  severity: low
+http:
+  - method: GET
+    path: ["{{BaseURL}}/wp-json/wp/v2/users"]
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["\"slug\":", "\"id\":"]
