@@ -1,0 +1,17 @@
+id: K70n0s510-host-poison
+info:
+  name: Host Header Poisoning (Password Reset)
+  author: K70n0s510
+  severity: high
+  tags: a07,host-header
+http:
+  - method: POST
+    path: ["{{BaseURL}}/password/reset"]
+    headers:
+      Host: "evil.com"
+      X-Forwarded-Host: "evil.com"
+    body: "email=admin@{{Host}}"
+    matchers:
+      - type: word
+        words: ["email sent", "success"]
+      # Need manual verification if the link in email points to evil.com

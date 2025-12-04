@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-squarespace
+info:
+  name: Squarespace Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,squarespace
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["squarespace.com"]
+      - type: word
+        words: ["expired-account"]

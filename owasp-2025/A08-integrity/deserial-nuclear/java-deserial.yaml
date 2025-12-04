@@ -1,0 +1,14 @@
+id: K70n0s510-java-deserial
+info:
+  name: Java Deserialization Header
+  author: K70n0s510
+  severity: high
+  tags: a08,java,rce
+http:
+  - method: GET
+    path: ["{{BaseURL}}/"]
+    headers:
+      Content-Type: "application/x-java-serialized-object"
+    matchers:
+      - type: word
+        words: ["rO0AB"] # Java Serialization Magic Bytes in Base64

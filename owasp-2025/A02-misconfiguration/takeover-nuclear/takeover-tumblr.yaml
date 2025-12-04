@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-tumblr
+info:
+  name: Tumblr Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,tumblr
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["domains.tumblr.com"]
+      - type: word
+        words: ["There's nothing here."]

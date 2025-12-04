@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-shopify
+info:
+  name: Shopify Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,shopify
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["myshopify.com"]
+      - type: word
+        words: ["Sorry, this shop is currently unavailable"]

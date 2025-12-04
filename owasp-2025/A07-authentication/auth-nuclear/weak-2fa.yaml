@@ -1,0 +1,16 @@
+id: K70n0s510-weak-2fa
+info:
+  name: Weak 2FA Implementation
+  author: K70n0s510
+  severity: medium
+  tags: a07,2fa
+http:
+  - method: POST
+    path: ["{{BaseURL}}/api/2fa/verify"]
+    body: "code=000000"
+    matchers:
+      - type: word
+        words: ["invalid code"]
+      - type: word
+        words: ["Rate limit exceeded"]
+        negative: true

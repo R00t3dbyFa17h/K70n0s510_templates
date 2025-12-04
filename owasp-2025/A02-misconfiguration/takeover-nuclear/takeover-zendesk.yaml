@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-zendesk
+info:
+  name: Zendesk Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,zendesk
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["zendesk.com"]
+      - type: word
+        words: ["Help Center Closed"]

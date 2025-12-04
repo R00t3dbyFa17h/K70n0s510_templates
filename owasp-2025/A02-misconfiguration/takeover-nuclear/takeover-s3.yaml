@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-s3
+info:
+  name: AWS S3 Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,aws
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["s3.amazonaws.com"]
+      - type: word
+        words: ["The specified bucket does not exist"]

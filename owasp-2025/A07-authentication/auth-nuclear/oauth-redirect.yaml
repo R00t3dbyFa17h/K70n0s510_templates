@@ -1,0 +1,13 @@
+id: K70n0s510-oauth-redirect
+info:
+  name: OAuth Open Redirect
+  author: K70n0s510
+  severity: high
+  tags: a07,oauth,redirect
+http:
+  - method: GET
+    path: ["{{BaseURL}}/oauth/authorize?client_id=1&response_type=code&redirect_uri=http://evil.com"]
+    matchers:
+      - type: regex
+        part: header
+        regex: ["Location:.*evil\.com"]

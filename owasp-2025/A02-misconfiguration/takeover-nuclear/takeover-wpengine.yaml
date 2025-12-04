@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-wpengine
+info:
+  name: WP Engine Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,wpengine
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["wpengine.com"]
+      - type: word
+        words: ["The site you were looking for could not be found"]

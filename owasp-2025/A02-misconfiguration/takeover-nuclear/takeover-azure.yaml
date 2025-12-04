@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-azure
+info:
+  name: Azure Traffic Manager Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,azure
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["trafficmanager.net"]
+      - type: word
+        words: ["404 Web Site not found"]

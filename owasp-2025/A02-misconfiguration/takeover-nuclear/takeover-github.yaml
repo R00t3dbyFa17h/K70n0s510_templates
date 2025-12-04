@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-github
+info:
+  name: GitHub Pages Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,github
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["github.io"]
+      - type: word
+        words: ["404 - There isn't a GitHub Pages site here"]

@@ -1,0 +1,14 @@
+id: K70n0s510-pickle-rce
+info:
+  name: Python Pickle Deserialization RCE
+  author: K70n0s510
+  severity: critical
+  tags: a08,python,rce
+http:
+  - method: POST
+    path: ["{{BaseURL}}/api/data"]
+    headers: {Content-Type: "application/x-python-pickle"}
+    body: "gASV......(malicious_pickle_payload)......" 
+    matchers:
+      - type: regex
+        regex: ["root:.*:0:0:"]

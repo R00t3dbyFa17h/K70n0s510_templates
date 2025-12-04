@@ -1,0 +1,15 @@
+id: K70n0s510-jwt-confusion
+info:
+  name: JWT Algorithm Confusion
+  author: K70n0s510
+  severity: critical
+  tags: a07,jwt,auth
+http:
+  - method: GET
+    path: ["{{BaseURL}}/api/user"]
+    headers:
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.signature_placeholder"
+    matchers:
+      - type: word
+        words: ["Invalid signature", "Unauthorized"]
+        negative: true

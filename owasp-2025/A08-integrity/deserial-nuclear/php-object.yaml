@@ -1,0 +1,12 @@
+id: K70n0s510-php-object
+info:
+  name: PHP Object Injection
+  author: K70n0s510
+  severity: high
+  tags: a08,php,rce
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?data=O:4:\"User\":2:{s:4:\"name\";s:5:\"admin\";}"]
+    matchers:
+      - type: word
+        words: ["Fatal error", "Call to undefined method"]

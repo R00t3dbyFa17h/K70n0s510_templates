@@ -1,0 +1,15 @@
+id: K70n0s510-takeover-pantheon
+info:
+  name: Pantheon Subdomain Takeover
+  author: K70n0s510
+  severity: high
+  tags: takeover,pantheon
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers-condition: and
+    matchers:
+      - type: cname
+        cname: ["pantheon.io"]
+      - type: word
+        words: ["404 error unknown site"]

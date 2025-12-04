@@ -1,0 +1,15 @@
+id: K70n0s510-viewstate-mac
+info:
+  name: ASP.NET ViewState No MAC
+  author: K70n0s510
+  severity: medium
+  tags: a08,aspnet
+http:
+  - method: GET
+    path: ["{{BaseURL}}/"]
+    matchers:
+      - type: word
+        words: ["__VIEWSTATE"]
+      - type: regex
+        regex: ["__VIEWSTATEGENERATOR"]
+        negative: true # If MAC is missing, it might be vulnerable

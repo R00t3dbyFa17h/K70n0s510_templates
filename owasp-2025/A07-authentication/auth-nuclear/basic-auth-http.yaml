@@ -1,0 +1,15 @@
+id: K70n0s510-basic-http
+info:
+  name: Basic Auth over HTTP
+  author: K70n0s510
+  severity: medium
+  tags: a07,auth,ssl
+http:
+  - method: GET
+    path: ["{{BaseURL}}"]
+    matchers:
+      - type: word
+        part: header
+        words: ["WWW-Authenticate: Basic"]
+      - type: dsl
+        dsl: ["scheme == 'http'"]
