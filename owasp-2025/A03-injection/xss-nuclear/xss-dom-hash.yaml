@@ -1,0 +1,15 @@
+id: K70n0s510-xss-dom-hash
+info:
+  name: DOM XSS Source (location.hash)
+  author: K70n0s510
+  severity: medium
+  description: Detects unsafe usage of location.hash which often leads to DOM XSS.
+  tags: xss,dom
+http:
+  - method: GET
+    path: ["{{BaseURL}}/#<img src=x onerror=alert(1)>"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words: ["location.hash", "innerHTML", "document.write"]

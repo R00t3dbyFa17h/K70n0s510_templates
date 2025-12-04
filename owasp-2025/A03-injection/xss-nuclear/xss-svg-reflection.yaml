@@ -1,0 +1,16 @@
+id: K70n0s510-xss-svg
+info:
+  name: SVG Reflected XSS
+  author: K70n0s510
+  severity: medium
+  tags: xss,svg
+http:
+  - method: GET
+    path: ["{{BaseURL}}/file.svg?payload=%3Csvg/onload=alert(1)%3E"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<svg/onload=alert(1)>"]
+      - type: word
+        part: header
+        words: ["image/svg+xml"]

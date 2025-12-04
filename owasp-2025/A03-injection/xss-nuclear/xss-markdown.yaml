@@ -1,0 +1,13 @@
+id: K70n0s510-xss-markdown
+info:
+  name: Markdown Image XSS
+  author: K70n0s510
+  severity: medium
+  tags: xss,markdown
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?comment=[a](javascript:alert(1))"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<a href=\"javascript:alert(1)\">"]

