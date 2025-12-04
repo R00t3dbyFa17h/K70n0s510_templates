@@ -1,0 +1,20 @@
+id: K70n0s510-apache-status-ext
+info:
+  name: Apache Server Status (Extended)
+  author: K70n0s510
+  severity: low
+  description: Checks for the machine-readable version of server-status.
+  tags: config,apache
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/server-status?auto"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Total Accesses:"
+          - "Total kBytes:"
+          - "Uptime:"
+      - type: status
+        status: [200]

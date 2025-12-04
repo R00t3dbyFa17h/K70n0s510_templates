@@ -1,0 +1,21 @@
+id: K70n0s510-rails-info
+info:
+  name: Ruby on Rails Info/Routes Exposure
+  author: K70n0s510
+  severity: medium
+  description: Detects the /rails/info/routes page which lists all API endpoints.
+  tags: config,rails,ruby
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/rails/info/routes"
+      - "{{BaseURL}}/rails/info/properties"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "<strong>Routes</strong>"
+          - "Path"
+          - "Controller#Action"
+      - type: status
+        status: [200]

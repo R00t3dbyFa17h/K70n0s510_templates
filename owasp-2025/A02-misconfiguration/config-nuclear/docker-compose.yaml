@@ -1,0 +1,21 @@
+id: K70n0s510-docker-compose
+info:
+  name: Exposed Docker Compose File
+  author: K70n0s510
+  severity: high
+  description: Detects exposed docker-compose.yml which leaks service architecture and environment variables.
+  tags: config,docker,exposure
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/docker-compose.yml"
+      - "{{BaseURL}}/docker-compose.yaml"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "version:"
+          - "services:"
+          - "image:"
+      - type: status
+        status: [200]

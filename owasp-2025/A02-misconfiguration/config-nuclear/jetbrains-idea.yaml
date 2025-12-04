@@ -1,0 +1,20 @@
+id: K70n0s510-jetbrains-idea
+info:
+  name: Exposed JetBrains .idea Project
+  author: K70n0s510
+  severity: low
+  description: Detects exposed .idea configuration files from IntelliJ/PyCharm.
+  tags: config,ide,jetbrains
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.idea/workspace.xml"
+      - "{{BaseURL}}/.idea/modules.xml"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "project version"
+          - "component name="
+      - type: status
+        status: [200]

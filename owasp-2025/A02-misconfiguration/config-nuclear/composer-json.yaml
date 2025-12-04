@@ -1,0 +1,19 @@
+id: K70n0s510-composer-json
+info:
+  name: Exposed composer.json
+  author: K70n0s510
+  severity: medium
+  description: Leaks PHP dependencies and versions.
+  tags: config,php,composer
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/composer.json"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "\"require\":"
+          - "\"license\":"
+      - type: status
+        status: [200]

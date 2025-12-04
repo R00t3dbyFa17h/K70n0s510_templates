@@ -1,0 +1,20 @@
+id: K70n0s510-npm-package
+info:
+  name: Exposed package.json
+  author: K70n0s510
+  severity: medium
+  description: Leaks all node.js dependencies and versions, allowing for CVE mapping.
+  tags: config,node,npm
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/package.json"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "\"name\":"
+          - "\"dependencies\":"
+          - "\"version\":"
+      - type: status
+        status: [200]

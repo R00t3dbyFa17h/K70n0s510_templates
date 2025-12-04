@@ -1,0 +1,18 @@
+id: K70n0s510-laravel-debug
+info:
+  name: Laravel Debug Mode Enabled
+  author: K70n0s510
+  severity: medium
+  description: Detects exposed Laravel stack traces (Ignition).
+  tags: config,laravel,php
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/_ignition/health-check"
+      - "{{BaseURL}}/doesnotexist_random_123"
+    matchers-condition: or
+    matchers:
+      - type: word
+        words: ["\"can_connect\":", "\"service\":\""]
+      - type: word
+        words: ["Whoops! There was an error.", "Generate a documentation key"]

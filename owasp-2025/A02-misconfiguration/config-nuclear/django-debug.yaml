@@ -1,0 +1,21 @@
+id: K70n0s510-django-debug
+info:
+  name: Django Debug Mode Enabled
+  author: K70n0s510
+  severity: medium
+  description: Detects the distinct yellow Django error page indicating Debug=True.
+  tags: config,django,python
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/doesnotexist_random_123"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "DisallowedHost"
+          - "Django"
+          - "Request Method:"
+          - "Exception Type:"
+      - type: status
+        status: [404, 500]
