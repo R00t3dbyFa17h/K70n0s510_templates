@@ -1,0 +1,17 @@
+id: K70n0s510-magento-config
+info:
+  name: Magento Config Leak (local.xml/env.php)
+  author: K70n0s510
+  severity: critical
+  tags: magento,config
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/app/etc/local.xml"
+      - "{{BaseURL}}/app/etc/env.php"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["<host>", "<username>", "<password>"]
+      - type: status
+        status: [200]

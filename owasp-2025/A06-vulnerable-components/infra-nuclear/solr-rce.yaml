@@ -1,0 +1,14 @@
+id: K70n0s510-solr-rce
+info:
+  name: Apache Solr Velocity RCE
+  author: K70n0s510
+  severity: critical
+  tags: rce,solr
+http:
+  - method: GET
+    path: ["{{BaseURL}}/solr/admin/info/system"]
+    matchers:
+      - type: word
+        words: ["solr_home", "lucene"]
+      - type: status
+        status: [200]

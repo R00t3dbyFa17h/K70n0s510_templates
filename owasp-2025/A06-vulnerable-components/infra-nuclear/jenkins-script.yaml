@@ -1,0 +1,20 @@
+id: K70n0s510-jenkins-script
+info:
+  name: Jenkins Script Console RCE
+  author: K70n0s510
+  severity: critical
+  description: Detects exposed Groovy script console.
+  tags: rce,jenkins,groovy
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/script"
+      - "{{BaseURL}}/jenkins/script"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["println(Jenkins.instance.pluginManager.plugins)"]
+      - type: word
+        words: ["Result: "]
+      - type: status
+        status: [200]

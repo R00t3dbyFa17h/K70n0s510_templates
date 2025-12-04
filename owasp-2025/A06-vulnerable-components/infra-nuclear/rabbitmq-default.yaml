@@ -1,0 +1,14 @@
+id: K70n0s510-rabbitmq
+info:
+  name: RabbitMQ Management Default Creds
+  author: K70n0s510
+  severity: high
+  tags: rabbitmq,auth
+http:
+  - method: GET
+    path: ["{{BaseURL}}/api/whoami"]
+    headers:
+      Authorization: "Basic Z3Vlc3Q6Z3Vlc3Q=" # guest:guest
+    matchers:
+      - type: word
+        words: ["\"name\":\"guest\"", "\"tags\":"]

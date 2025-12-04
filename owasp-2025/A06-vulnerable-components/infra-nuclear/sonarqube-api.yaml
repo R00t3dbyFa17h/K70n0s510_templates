@@ -1,0 +1,15 @@
+id: K70n0s510-sonarqube-api
+info:
+  name: SonarQube API Unauth
+  author: K70n0s510
+  severity: high
+  tags: sonarqube,api
+http:
+  - method: GET
+    path: ["{{BaseURL}}/api/settings/values", "{{BaseURL}}/api/components/search?qualifiers=TRK"]
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["key", "name", "sonar.core.id"]
+      - type: status
+        status: [200]

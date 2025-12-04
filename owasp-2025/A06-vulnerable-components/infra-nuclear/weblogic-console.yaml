@@ -1,0 +1,17 @@
+id: K70n0s510-weblogic-console
+info:
+  name: Oracle WebLogic Console Exposure
+  author: K70n0s510
+  severity: high
+  tags: weblogic,oracle
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/console/login/LoginForm.jsp"
+      - "{{BaseURL}}/wls-wsat/CoordinatorPortType"
+    matchers-condition: or
+    matchers:
+      - type: word
+        words: ["WebLogic Server", "Hypertext Transfer Protocol"]
+      - type: status
+        status: [200, 404] # 404 on wsat can sometimes confirm existence

@@ -1,0 +1,17 @@
+id: K70n0s510-tomcat-manager
+info:
+  name: Apache Tomcat Manager Default Creds
+  author: K70n0s510
+  severity: critical
+  tags: tomcat,auth,rce
+http:
+  - method: GET
+    path: ["{{BaseURL}}/manager/html"]
+    headers:
+      Authorization: ["Basic YWRtaW46YWRtaW4=", "Basic dG9tY2F0OnRvbWNhdA=="] # admin:admin, tomcat:tomcat
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["Tomcat Web Application Manager"]
+      - type: status
+        status: [200]

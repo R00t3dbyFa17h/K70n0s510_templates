@@ -1,0 +1,17 @@
+id: K70n0s510-jboss-console
+info:
+  name: JBoss/Wildfly Management Console
+  author: K70n0s510
+  severity: high
+  tags: jboss,wildfly,exposure
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/management"
+      - "{{BaseURL}}/console/App.html"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["JBoss EAP", "WildFly"]
+      - type: status
+        status: [200]

@@ -1,0 +1,9 @@
+id: K70n0s510-elasticsearch
+info:
+  name: ElasticSearch Unauthenticated
+  author: K70n0s510
+  severity: medium
+  tags: elastic,db
+http:
+  - method: GET
+    path: ["{{BaseURL}}/_cat/indices?v", "{{Base
