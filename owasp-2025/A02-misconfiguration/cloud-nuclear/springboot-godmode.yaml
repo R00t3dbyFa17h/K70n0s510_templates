@@ -1,0 +1,26 @@
+id: K70n0s510-springboot-godmode
+info:
+  name: Spring Boot Actuator God Mode
+  author: K70n0s510
+  severity: high
+  description: Fuzzes for Heapdump, Env, Trace, and ConfigProps.
+  tags: springboot,misconfig
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/actuator/env"
+      - "{{BaseURL}}/actuator/heapdump"
+      - "{{BaseURL}}/actuator/configprops"
+      - "{{BaseURL}}/actuator/mappings"
+      - "{{BaseURL}}/actuator/httptrace"
+      - "{{BaseURL}}/env"
+      - "{{BaseURL}}/heapdump"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words: ["\"activeProfiles\":", "propertySources"]
+      - type: word
+        words: ["application/vnd.spring-boot.actuator"]
+      - type: binary
+        binary: ["1f8b0800"] # GZIP header for heapdump

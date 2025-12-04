@@ -1,0 +1,28 @@
+id: K70n0s510-swagger-godmode
+info:
+  name: Swagger/OpenAPI Documentation Fuzzer
+  author: K70n0s510
+  severity: info
+  description: Checks 20+ locations for API documentation.
+  tags: swagger,api,docs
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/swagger-ui.html"
+      - "{{BaseURL}}/swagger/index.html"
+      - "{{BaseURL}}/api/docs"
+      - "{{BaseURL}}/v2/api-docs"
+      - "{{BaseURL}}/openapi.json"
+      - "{{BaseURL}}/swagger.json"
+      - "{{BaseURL}}/api/swagger/index.html"
+      - "{{BaseURL}}/documentation/swagger-ui.html"
+      - "{{BaseURL}}/libs/swaggerui/"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words: ["Swagger UI", "swagger-ui"]
+      - type: word
+        words: ["\"openapi\":", "\"swagger\":"]
+      - type: word
+        words: ["api-docs", "API Documentation"]

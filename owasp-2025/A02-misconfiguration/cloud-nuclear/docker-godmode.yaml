@@ -1,0 +1,18 @@
+id: K70n0s510-docker-godmode
+info:
+  name: Docker Registry Catalog
+  author: K70n0s510
+  severity: high
+  tags: docker,cloud
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/v2/_catalog"
+      - "{{BaseURL}}/v2/"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["\"repositories\":", "Docker-Distribution-Api-Version"]
+      - type: status
+        status: [200]

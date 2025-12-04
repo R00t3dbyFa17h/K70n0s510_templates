@@ -1,0 +1,20 @@
+id: K70n0s510-k8s-godmode
+info:
+  name: Kubernetes API Unauthenticated Access
+  author: K70n0s510
+  severity: critical
+  tags: k8s,kubernetes,cloud
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/v1/pods"
+      - "{{BaseURL}}/api/v1/secrets"
+      - "{{BaseURL}}:10250/pods" # Kubelet
+      - "{{BaseURL}}:6443/api/v1"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["\"kind\":", "\"apiVersion\":", "\"items\":"]
+      - type: status
+        status: [200]

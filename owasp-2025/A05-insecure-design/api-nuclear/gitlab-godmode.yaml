@@ -1,0 +1,19 @@
+id: K70n0s510-gitlab-godmode
+info:
+  name: GitLab Public Projects/Users
+  author: K70n0s510
+  severity: medium
+  tags: gitlab,api
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/v4/projects"
+      - "{{BaseURL}}/api/v4/users"
+      - "{{BaseURL}}/api/v4/groups"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["\"visibility\":\"public\"", "\"avatar_url\":"]
+      - type: status
+        status: [200]

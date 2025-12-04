@@ -1,0 +1,20 @@
+id: K70n0s510-s3-godmode
+info:
+  name: AWS S3 Bucket Listing / Takeover
+  author: K70n0s510
+  severity: high
+  tags: s3,aws,takeover
+http:
+  - method: GET
+    path:
+      - "http://{{Host}}.s3.amazonaws.com"
+      - "http://s3.amazonaws.com/{{Host}}"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        name: takeover
+        words: ["The specified bucket does not exist"]
+      - type: word
+        name: listing
+        words: ["ListBucketResult", "<Name>{{Host}}</Name>"]

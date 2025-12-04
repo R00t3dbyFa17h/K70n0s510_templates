@@ -1,0 +1,21 @@
+id: K70n0s510-firebase-godmode
+info:
+  name: Firebase Config (.json) Leak
+  author: K70n0s510
+  severity: critical
+  description: Checks for public access to Firebase database JSON.
+  tags: firebase,cloud,google
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.json"
+      - "{{BaseURL}}/firebase.json"
+      - "https://{{Host}}.firebaseio.com/.json"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["\"rules\":", "\"users\":", "\"auth\":"]
+      - type: word
+        words: ["error", "Permission denied"]
+        negative: true

@@ -1,0 +1,32 @@
+id: K70n0s510-graphql-godmode
+info:
+  name: GraphQL Introspection God Mode
+  author: K70n0s510
+  severity: high
+  description: Fuzzes 15+ common GraphQL endpoints for Introspection (Schema Leak).
+  tags: graphql,api,fuzz
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/graphql"
+      - "{{BaseURL}}/api/graphql"
+      - "{{BaseURL}}/v1/graphql"
+      - "{{BaseURL}}/graphql/console"
+      - "{{BaseURL}}/hasura/graphql"
+      - "{{BaseURL}}/v1/api/graphql"
+      - "{{BaseURL}}/graph"
+      - "{{BaseURL}}/query"
+    body: '{"query":"query IntrospectionQuery{__schema{queryType{name}}}"}'
+    headers:
+      Content-Type: application/json
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "__schema"
+          - "queryType"
+          - "IntrospectionQuery"
+      - type: status
+        status: [200]
