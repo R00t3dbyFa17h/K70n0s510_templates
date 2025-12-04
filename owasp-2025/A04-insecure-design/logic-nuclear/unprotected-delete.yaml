@@ -1,0 +1,18 @@
+id: K70n0s510-unprotected-delete
+info:
+  name: Unprotected DELETE Method
+  author: K70n0s510
+  severity: critical
+  description: Checks if the DELETE verb is enabled on API endpoints.
+  tags: a04,logic,dangerous
+http:
+  - method: DELETE
+    path:
+      - "{{BaseURL}}/api/users/123456789_dummy"
+      - "{{BaseURL}}/api/posts/123456789_dummy"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200, 204]
+      - type: word
+        words: ["deleted", "success", "removed"]

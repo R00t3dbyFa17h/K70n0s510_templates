@@ -1,0 +1,15 @@
+id: K70n0s510-rate-limit
+info:
+  name: Missing Rate Limiting (Heuristic)
+  author: K70n0s510
+  severity: low
+  description: Checks headers for X-RateLimit. (Manual verification required).
+  tags: a04,ratelimit
+http:
+  - method: GET
+    path: ["{{BaseURL}}/login"]
+    matchers:
+      - type: word
+        part: header
+        words: ["X-RateLimit", "Retry-After"]
+        negative: true

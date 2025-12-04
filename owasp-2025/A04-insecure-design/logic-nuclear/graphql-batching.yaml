@@ -1,0 +1,14 @@
+id: K70n0s510-graphql-batch
+info:
+  name: GraphQL Batching Enabled
+  author: K70n0s510
+  severity: medium
+  tags: a04,graphql,dos
+http:
+  - method: POST
+    path: ["{{BaseURL}}/graphql"]
+    body: '[{"query":"{__typename}"},{"query":"{__typename}"},{"query":"{__typename}"}]'
+    headers: {Content-Type: application/json}
+    matchers:
+      - type: word
+        words: ["__typename", "__typename", "__typename"] # If it reflects 3 times, batching is on

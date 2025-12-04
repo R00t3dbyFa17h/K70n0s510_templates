@@ -1,0 +1,15 @@
+id: K70n0s510-ssrf-referer
+info:
+  name: SSRF via Referer Header
+  author: K70n0s510
+  severity: medium
+  tags: a10,ssrf,blind
+http:
+  - method: GET
+    path: ["{{BaseURL}}/analytics"]
+    headers:
+      Referer: "http://{{interactsh-url}}"
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http", "dns"]

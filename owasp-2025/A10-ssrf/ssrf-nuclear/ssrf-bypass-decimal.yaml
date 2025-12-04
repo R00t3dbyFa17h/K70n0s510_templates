@@ -1,0 +1,12 @@
+id: K70n0s510-ssrf-decimal
+info:
+  name: SSRF Bypass (Decimal IP)
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf,bypass
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?url=http://2130706433"] # 127.0.0.1
+    matchers:
+      - type: word
+        words: ["localhost", "127.0.0.1"]

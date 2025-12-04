@@ -1,0 +1,15 @@
+id: K70n0s510-ssrf-pdf
+info:
+  name: SSRF via PDF/Image Generator
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf,pdf
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/generate?url=http://{{interactsh-url}}"
+      - "{{BaseURL}}/render?link=http://{{interactsh-url}}"
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http", "dns"]

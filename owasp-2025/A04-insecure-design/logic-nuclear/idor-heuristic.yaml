@@ -1,0 +1,21 @@
+id: K70n0s510-idor-heuristic
+info:
+  name: IDOR Heuristic Detection
+  author: K70n0s510
+  severity: medium
+  description: Detects API endpoints returning sequential numeric IDs (IDOR candidates).
+  tags: a04,idor,api
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/users/1"
+      - "{{BaseURL}}/api/orders/100"
+      - "{{BaseURL}}/api/profile/1"
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex: ["\"id\":\s*[0-9]+"]
+      - type: status
+        status: [200]
+      - type: word
+        words: ["user", "order", "profile"]

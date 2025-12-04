@@ -1,0 +1,13 @@
+id: K70n0s510-ssrf-opengraph
+info:
+  name: SSRF via OpenGraph/Preview
+  author: K70n0s510
+  severity: medium
+  tags: a10,ssrf
+http:
+  - method: GET
+    path: ["{{BaseURL}}/preview?url=http://{{interactsh-url}}"]
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http", "dns"]

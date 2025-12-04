@@ -1,0 +1,15 @@
+id: K70n0s510-ssrf-json
+info:
+  name: SSRF via JSON Parameter
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf
+http:
+  - method: POST
+    path: ["{{BaseURL}}/api/fetch"]
+    headers: {Content-Type: application/json}
+    body: '{"image_url":"http://{{interactsh-url}}"}'
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words: ["http"]

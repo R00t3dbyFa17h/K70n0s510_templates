@@ -1,0 +1,14 @@
+id: K70n0s510-ssrf-local
+info:
+  name: SSRF Localhost Port Scan
+  author: K70n0s510
+  severity: high
+  tags: a10,ssrf
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?url=http://127.0.0.1:22"
+      - "{{BaseURL}}/?url=http://localhost:8080"
+    matchers:
+      - type: word
+        words: ["SSH", "Apache-Coyote"]

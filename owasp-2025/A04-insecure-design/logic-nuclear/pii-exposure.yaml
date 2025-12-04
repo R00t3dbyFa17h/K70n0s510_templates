@@ -1,0 +1,17 @@
+id: K70n0s510-pii-exposure
+info:
+  name: PII Exposure (Email/Phone)
+  author: K70n0s510
+  severity: medium
+  tags: a04,pii,gdpr
+http:
+  - method: GET
+    path: ["{{BaseURL}}/api/users", "{{BaseURL}}/contact"]
+    matchers-condition: or
+    matchers:
+      - type: regex
+        name: email
+        regex: ["[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}"]
+      - type: regex
+        name: phone
+        regex: ["\+?[0-9]{1,4}?[-.\s]?\(?[0-9]{1,3}?\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,4}"]

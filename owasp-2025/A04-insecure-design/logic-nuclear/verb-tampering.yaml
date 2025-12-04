@@ -1,0 +1,20 @@
+id: K70n0s510-verb-tampering
+info:
+  name: HTTP Verb Tampering Auth Bypass
+  author: K70n0s510
+  severity: high
+  description: Checks if restricted pages are accessible via HEAD/PUT/DELETE methods.
+  tags: a04,logic,auth-bypass
+http:
+  - method: HEAD
+    path:
+      - "{{BaseURL}}/admin"
+      - "{{BaseURL}}/dashboard"
+      - "{{BaseURL}}/profile"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["Access Denied", "Unauthorized"]
+        negative: true

@@ -1,0 +1,17 @@
+id: K70n0s510-admin-path
+info:
+  name: Admin Path Bypass
+  author: K70n0s510
+  severity: high
+  tags: a04,auth-bypass
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/%2e/admin"
+      - "{{BaseURL}}/admin/."
+      - "{{BaseURL}}//admin//"
+    matchers:
+      - type: word
+        words: ["Dashboard", "Administration"]
+      - type: status
+        status: [200]

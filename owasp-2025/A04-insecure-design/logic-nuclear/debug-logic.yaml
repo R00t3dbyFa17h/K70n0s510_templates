@@ -1,0 +1,17 @@
+id: K70n0s510-debug-logic
+info:
+  name: Debug Logic Enabled
+  author: K70n0s510
+  severity: medium
+  tags: a04,debug
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?debug=true"
+      - "{{BaseURL}}/?test=1"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words: ["stack trace", "debug info", "performance"]
+      - type: status
+        status: [200]
