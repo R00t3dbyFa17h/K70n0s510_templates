@@ -1,0 +1,3 @@
+id: K70n0s510-directory-listing
+info: {name: Directory Listing Enabled, severity: info}
+http: [{method: GET, path: ["{{BaseURL}}/images/", "{{BaseURL}}/uploads/"], matchers: [{type: status, status: [200]}, {type: word, words: ["Index of /"]}]}]
