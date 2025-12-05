@@ -1,33 +1,18 @@
 id: K70n0s510-sqli-error-godmode
 info:
-  name: SQLi Error God Mode (Universal DB)
+  name: SQLi Error God Mode
   author: K70n0s510
   severity: high
-  description: Fuzzes for MySQL, PostgreSQL, MSSQL, and Oracle errors simultaneously.
-  tags: sqli,error,fuzz
+  tags: sqli,error
 http:
   - method: GET
     path:
       - "{{BaseURL}}/?id=1'"
       - "{{BaseURL}}/?id=1\""
-      - "{{BaseURL}}/?id=1' OR '1'='1"
-      - "{{BaseURL}}/?id=1\\""
-      - "{{BaseURL}}/?q=1' ORDER BY 100--"
-
-    matchers-condition: or
+    matchers-condition: and
     matchers:
       - type: word
-        name: mysql-error
-        words: ["You have an error in your SQL syntax", "MySQL result index"]
+        words: ["SQL syntax", "MySQL result", "ORA-00933"]
       - type: word
-        name: postgres-error
-        words: ["PostgreSQL query failed", "unterminated quoted string"]
-      - type: word
-        name: mssql-error
-        words: ["Unclosed quotation mark", "Microsoft OLE DB Provider for SQL Server"]
-      - type: word
-        name: oracle-error
-        words: ["ORA-00933", "ORA-01756"]
-      - type: word
-        name: jdbc-error
-        words: ["SQLServerException", "PSQLException"]
+        words: ["AkamaiGHost", "Access Denied"]
+        negative: true
