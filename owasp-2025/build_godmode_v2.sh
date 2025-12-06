@@ -1,5 +1,7 @@
 #!/bin/bash
-# K70n0s510 GOD MODE BUILDER (WAF-AWARE)
+# K70n0s510 GOD MODE V2 (WAF-PROOF EDITION)
+# Upgrades critical templates with "Anti-Akamai" AND "Anti-Cloudflare" logic.
+
 BASE_DIR="$HOME/K70n0s510_templates/owasp-2025"
 mkdir -p "$BASE_DIR/A03-injection/lfi-nuclear"
 mkdir -p "$BASE_DIR/A01-access-control/ssrf-nuclear"
@@ -7,9 +9,11 @@ mkdir -p "$BASE_DIR/A03-injection/sqli-godmode"
 mkdir -p "$BASE_DIR/A03-injection/xss-nuclear"
 mkdir -p "$BASE_DIR/A03-injection/rce-nuclear"
 
-echo "💉 Injecting WAF-Aware Steroids..."
+echo "🛡️ Building God Mode V2 (WAF-Proof)..."
 
+# ==========================================
 # 1. LFI GOD MODE
+# ==========================================
 cat <<EOF > "$BASE_DIR/A03-injection/lfi-nuclear/lfi-linux-godmode.yaml"
 id: K70n0s510-lfi-linux-godmode
 info:
@@ -27,12 +31,22 @@ http:
     matchers:
       - type: regex
         regex: ["root:.*:0:0:"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied", "Cloudflare"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
 EOF
 
+# ==========================================
 # 2. SSRF GOD MODE
+# ==========================================
 cat <<EOF > "$BASE_DIR/A01-access-control/ssrf-nuclear/ssrf-aws-godmode.yaml"
 id: K70n0s510-ssrf-aws-godmode
 info:
@@ -49,12 +63,22 @@ http:
     matchers:
       - type: word
         words: ["ami-id", "instance-id"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
 EOF
 
+# ==========================================
 # 3. SQLi GOD MODE
+# ==========================================
 cat <<EOF > "$BASE_DIR/A03-injection/sqli-godmode/sqli-error-godmode.yaml"
 id: K70n0s510-sqli-error-godmode
 info:
@@ -71,12 +95,22 @@ http:
     matchers:
       - type: word
         words: ["SQL syntax", "MySQL result", "ORA-00933"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
 EOF
 
+# ==========================================
 # 4. XSS GOD MODE
+# ==========================================
 cat <<EOF > "$BASE_DIR/A03-injection/xss-nuclear/xss-polyglot-godmode.yaml"
 id: K70n0s510-xss-godmode
 info:
@@ -96,12 +130,22 @@ http:
       - type: word
         part: header
         words: ["text/html"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
 EOF
 
+# ==========================================
 # 5. RCE GOD MODE
+# ==========================================
 cat <<EOF > "$BASE_DIR/A03-injection/rce-nuclear/rce-godmode.yaml"
 id: K70n0s510-rce-godmode
 info:
@@ -118,9 +162,17 @@ http:
     matchers:
       - type: regex
         regex: ["root:.*:0:0:", "uid=[0-9]+.*gid=[0-9]+"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
 EOF
 
-echo "✅ GOD MODE INSTALLED (WAF Protected)."
+echo "✅ GOD MODE V2 INSTALLED (Akamai & Cloudflare Proof)."

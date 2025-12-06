@@ -14,6 +14,14 @@ http:
     matchers:
       - type: regex
         regex: ["root:.*:0:0:"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied", "Cloudflare"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true

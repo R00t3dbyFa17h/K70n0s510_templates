@@ -13,6 +13,14 @@ http:
     matchers:
       - type: word
         words: ["ami-id", "instance-id"]
+      
+      # GLOBAL WAF IGNORE LIST
       - type: word
-        words: ["AkamaiGHost", "Access Denied"]
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
+          - "Cloudflare"
+          - "Attention Required"
+          - "security by cloudflare"
+          - "Please verify you are a human"
         negative: true
