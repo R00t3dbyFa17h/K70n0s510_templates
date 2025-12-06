@@ -1,20 +1,24 @@
 id: K70n0s510-s3-godmode
+
 info:
-  name: AWS S3 Bucket Takeover (Strict)
+  name: S3 Bucket Public Access
   author: K70n0s510
   severity: high
-  tags: s3,aws,takeover
-http:
+  description: Detects if an S3 bucket is publicly listable (prevents False Positives).
+
+requests:
   - method: GET
     path:
-      - "http://{{Host}}.s3.amazonaws.com"
-      - "http://s3.amazonaws.com/{{Host}}"
+      - "http://{{target}}.s3.amazonaws.com"
+      - "http://s3.amazonaws.com/{{target}}"
+
     matchers-condition: and
     matchers:
       - type: word
-        words: ["The specified bucket does not exist"]
-      # STRICTER CHECK: Only fire if we don't see Cloudflare headers (implies direct AWS connection)
-      - type: word
-        part: header
-        words: ["Server: Cloudflare", "cf-ray"]
-        negative: true
+        words:
+          - "ListBucketResult"
+        part: body
+
+      - type: status
+        status:
+          - 200
