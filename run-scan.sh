@@ -1,27 +1,54 @@
 #!/bin/bash
 
-# K70n0s510 Scanner - Alerting Edition
+# K70n0s510 Scanner - Visual Console Edition
+# Features: Colorful Nuclei Output + Background Discord Alerts
+# Author: Nicholas Mullenski
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# 1. Automatic Path Detection (Portable)
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+TEMPLATE_DIR="$SCRIPT_DIR/owasp-2025/"
+CONFIG_PATH="$HOME/.config/notify/provider-config.yaml"
+OUTPUT_FILE="scan_results.txt"
+
 TARGET=$1
 
-# Absolute Path to templates
-TEMPLATE_DIR="$HOME/K70n0s510_templates/owasp-2025/"
-
 if [ -z "$TARGET" ]; then
-    echo -e "${RED}Usage: ./run-scan.sh <target>${NC}"
+    echo -e "${RED}Usage: ./run-scan.sh <target_domain_OR_file>${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}🚀 K70n0s510 Scanner: Active on $TARGET...${NC}"
-echo -e "${BLUE}📂 Loading templates from: $TEMPLATE_DIR ${NC}"
-echo -e "${BLUE}🔔 Alerts configured: Sending hits to Discord.${NC}"
+# 2. Determine Target Type
+if [ -f "$TARGET" ]; then
+    echo -e "${GREEN}📜 Target List Detected: $TARGET ${NC}"
+    NUCLEI_ARGS="-l $TARGET"
+else
+    echo -e "${GREEN}🎯 Single Target Detected: $TARGET ${NC}"
+    NUCLEI_ARGS="-u $TARGET"
+fi
 
-# Pipeline: Nuclei -> JSON -> Notify -> Discord
-# Note: Requires 'notify' tool installed and configured in ~/.config/notify/provider-config.yaml
-nuclei -u "$TARGET" -t "$TEMPLATE_DIR" -rl 50 -bs 10 -silent -j | tee -a scan_results.json | notify -provider-config ~/.config/notify/provider-config.yaml -id k70-alerts -bulk
+echo -e "${BLUE}🚀 Starting K70n0s510 Scan... (Visual Mode)${NC}"
+echo -e "${BLUE}📂 Loading Templates from: $TEMPLATE_DIR ${NC}"
 
-echo -e "${GREEN}✅ Scan Complete.${NC}"
+# 3. Start Background Alert Listener
+# Watches the output file. When a new hit is found, pipes it to Discord silently.
+# Filters out "[INF]" lines so only vulnerabilities are sent.
+touch $OUTPUT_FILE
+tail -n 0 -f $OUTPUT_FILE | grep --line-buffered "\[" | grep -v "\[INF\]" | notify -provider-config "$CONFIG_PATH" -id k70-alerts -bulk > /dev/null 2>&1 &
+LISTENER_PID=$!
+
+# 4. Run Nuclei (Foreground)
+# -o: Saves to file (which triggers the listener)
+# -stats: Shows the progress bar
+# No -silent: Ensures colorful bracket output in terminal
+nuclei $NUCLEI_ARGS -t "$TEMPLATE_DIR" -o $OUTPUT_FILE -rl 50 -bs 10 -stats
+
+# 5. Cleanup
+# Kill the background listener when Nuclei finishes
+kill $LISTENER_PID > /dev/null 2>&1
+
+echo -e "\n${GREEN}✅ Scan Complete. Full results saved to $OUTPUT_FILE${NC}"
