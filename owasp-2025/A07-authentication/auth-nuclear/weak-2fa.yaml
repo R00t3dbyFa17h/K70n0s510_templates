@@ -6,11 +6,19 @@ info:
   tags: a07,2fa
 http:
   - method: POST
-    path: ["{{BaseURL}}/api/2fa/verify"]
+    path:
+      - "{{BaseURL}}/api/2fa/verify"
     body: "code=000000"
+
+    matchers-condition: and
     matchers:
       - type: word
-        words: ["invalid code"]
+        words:
+          - "invalid code"
+      # WAF FIX: Ignore WAF blocks and Rate Limits
       - type: word
-        words: ["Rate limit exceeded"]
+        words:
+          - "Rate limit exceeded"
+          - "Access Denied"
+          - "AkamaiGHost"
         negative: true

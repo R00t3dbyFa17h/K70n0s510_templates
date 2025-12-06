@@ -7,9 +7,22 @@ info:
   tags: a04,ratelimit
 http:
   - method: GET
-    path: ["{{BaseURL}}/login"]
+    path:
+      - "{{BaseURL}}/login"
+    
+    matchers-condition: and
     matchers:
+      # If these headers are missing, it might be vulnerable...
       - type: word
         part: header
-        words: ["X-RateLimit", "Retry-After"]
+        words:
+          - "X-RateLimit"
+          - "Retry-After"
+        negative: true
+      
+      # ...BUT if we are blocked by Akamai, we are effectively rate limited. Ignore it.
+      - type: word
+        words:
+          - "AkamaiGHost"
+          - "Access Denied"
         negative: true
