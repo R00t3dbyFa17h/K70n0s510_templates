@@ -1,0 +1,24 @@
+id: K70n0s510-react-devtools
+info:
+  name: React DevTools & Source Leak
+  author: K70n0s510
+  severity: high
+  description: Detects exposed React Source Maps and DevTools which leak full frontend source code.
+  tags: react,config,exposure
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/_next/static/development/_buildManifest.js"
+      - "{{BaseURL}}/static/js/main.js.map"
+      - "{{BaseURL}}/static/js/bundle.js.map"
+      - "{{BaseURL}}/_next/source-maps"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "webpack://"
+          - "\"sources\":["
+          - "react-devtools"
+      - type: status
+        status: [200]
