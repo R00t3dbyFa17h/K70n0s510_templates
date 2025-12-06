@@ -3,7 +3,6 @@ info:
   name: DOM XSS Source (location.hash)
   author: K70n0s510
   severity: medium
-  description: Detects unsafe usage of location.hash which often leads to DOM XSS.
   tags: xss,dom
 http:
   - method: GET
@@ -13,3 +12,7 @@ http:
       - type: word
         part: body
         words: ["location.hash", "innerHTML", "document.write"]
+      # CLOUDFLARE BLOCK
+      - type: word
+        words: ["Cloudflare", "Attention Required"]
+        negative: true

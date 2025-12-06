@@ -7,9 +7,14 @@ info:
 http:
   - method: GET
     path: ["{{BaseURL}}/"]
+    matchers-condition: and
     matchers:
       - type: word
         words: ["__VIEWSTATE"]
       - type: regex
         regex: ["__VIEWSTATEGENERATOR"]
-        negative: true # If MAC is missing, it might be vulnerable
+        negative: true
+      # CLOUDFLARE BLOCK
+      - type: word
+        words: ["Cloudflare", "Attention Required", "Access denied"]
+        negative: true

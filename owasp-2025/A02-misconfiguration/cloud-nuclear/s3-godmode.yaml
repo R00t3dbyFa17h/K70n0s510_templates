@@ -1,6 +1,6 @@
 id: K70n0s510-s3-godmode
 info:
-  name: AWS S3 Bucket Listing / Takeover
+  name: AWS S3 Bucket Takeover (Strict)
   author: K70n0s510
   severity: high
   tags: s3,aws,takeover
@@ -9,12 +9,12 @@ http:
     path:
       - "http://{{Host}}.s3.amazonaws.com"
       - "http://s3.amazonaws.com/{{Host}}"
-
-    matchers-condition: or
+    matchers-condition: and
     matchers:
       - type: word
-        name: takeover
         words: ["The specified bucket does not exist"]
+      # STRICTER CHECK: Only fire if we don't see Cloudflare headers (implies direct AWS connection)
       - type: word
-        name: listing
-        words: ["ListBucketResult", "<Name>{{Host}}</Name>"]
+        part: header
+        words: ["Server: Cloudflare", "cf-ray"]
+        negative: true
