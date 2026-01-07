@@ -4,32 +4,27 @@ info:
   name: Liferay Portal 7.3 - Headless Admin Workflow RCE
   author: R00t3dbyFa17h
   severity: critical
-  description: Detects exposed Liferay Headless Admin Workflow API which allows RCE via deserialization in version 7.3 (Athanasius).
+  description: Detects exposed Liferay Headless Admin Workflow API or Version 7.3.
   reference:
     - https://nvd.nist.gov/vuln/detail/CVE-2024-38002
-  tags: liferay, rce, nasa, headless, api
+  tags: liferay, rce, nasa
 
 requests:
   - method: GET
     path:
-      # 1. Check for the Vulnerable API Endpoint
       - "{{BaseURL}}/o/headless-admin-workflow/v1.0/workflow-definitions"
-      # 2. Check for the Version Leak (Passive)
       - "{{BaseURL}}/o/js/liferay.js"
+
+    stop-at-first-match: true
 
     matchers-condition: or
     matchers:
-      # Matcher 1: If the API is Open (Status 200 + JSON)
-      - type: word
-        part: body
-        words:
-          - "workflowDefinitionId"
-          - "items"
-        condition: and
-        status:
-          - 200
+      # Matcher 1: API Check (Using DSL to combine Status + Body)
+      - type: dsl
+        dsl:
+          - "status_code == 200 && contains(body, 'workflowDefinitionId') && contains(body, 'items')"
 
-      # Matcher 2: If we see the specific "Athanasius" version comment
+      # Matcher 2: Version Check
       - type: word
         part: body
         words:
