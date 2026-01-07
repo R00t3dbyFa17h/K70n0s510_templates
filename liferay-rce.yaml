@@ -1,33 +1,27 @@
-id: liferay-headless-rce
+id: liferay-admin-user-leak
 
 info:
-  name: Liferay Portal 7.3 - Headless Admin Workflow RCE
+  name: Liferay Headless Admin User Leak (Site 10157)
   author: R00t3dbyFa17h
   severity: critical
-  description: Detects exposed Liferay Headless Admin Workflow API or Version 7.3.
-  reference:
-    - https://nvd.nist.gov/vuln/detail/CVE-2024-38002
-  tags: liferay, rce, nasa
+  description: Checks for exposed User Account data via Headless Admin User API using discovered Site ID.
+  tags: liferay, leak, nasa
 
 requests:
   - method: GET
     path:
-      - "{{BaseURL}}/o/headless-admin-workflow/v1.0/workflow-definitions"
-      - "{{BaseURL}}/o/js/liferay.js"
+      # Payload 1: General User Accounts check
+      - "{{BaseURL}}/o/headless-admin-user/v1.0/user-accounts"
+      # Payload 2: TARGETED check using the Site ID we found in the JS
+      - "{{BaseURL}}/o/headless-admin-user/v1.0/sites/10157/user-accounts"
+      # Payload 3: Check for specific roles (often less protected)
+      - "{{BaseURL}}/o/headless-admin-user/v1.0/roles"
 
     stop-at-first-match: true
 
     matchers-condition: or
     matchers:
-      # Matcher 1: API Check (Using DSL to combine Status + Body)
       - type: dsl
         dsl:
-          - "status_code == 200 && contains(body, 'workflowDefinitionId') && contains(body, 'items')"
-
-      # Matcher 2: Version Check
-      - type: word
-        part: body
-        words:
-          - "Athanasius"
-          - "7.3.x"
-        condition: and
+          # We are looking for JSON data containing email addresses or user IDs
+          - "status_code == 200 && contains(body, 'emailAddress') && contains(body, 'id')"
